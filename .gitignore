@@ -1,0 +1,18 @@
+# Ignorar archivos y directorios generados por Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+plumia/include
+plumia/bin
+plumia/lib
+plumia/lib64
+
+# Ignorar archivos de configuración de IDE
+.vscode/
+.idea/
+
+# Ignorar archivos de caché de varios sistemas operativos
+.DS_Store
+Thumbs.db

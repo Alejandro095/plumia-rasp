@@ -1,7 +1,7 @@
 from gpiozero import Button
 from lib.servo import init_servo, open_gate, close_gate
 from time import sleep
-from lib.oled.main import init_oled, display_common_screen, display_loading_screen
+from lib.oled.main import init_oled, display_common_screen, display_loading_screen, display_qr_screen
 import requests
 
 from lib.requests import getSpotsAvailable
@@ -30,7 +30,16 @@ def input_pressed_callback():
             "mallId": "1"
         }
         response = requests.post("https://plumia-bot.onrender.com/api/visit/arrived", json=body)
-        print(response.text)
+        
+        data = response.json()
+
+        message = data.get("message")
+
+        if (message == "Vehicle not found"):
+            stop_loading_screen()
+            display_qr_screen('t.me/PlumIA_bot')
+
+
         return response.status_code == 200
     
     lcp = read_number_plate(handler_license_plate, input_sensor)

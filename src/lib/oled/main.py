@@ -6,6 +6,8 @@ from time import sleep
 from pathlib import Path
 import threading
 
+import qrcode
+
 from lib.oled.utils.text import center_text
 
 serial = None
@@ -87,6 +89,56 @@ def display_loading_screen(message="Espere un momento"):
 
 
     return stop_spinner
+
+def display_qr_screen(qr_data):
+    # Crear el código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=4,
+        border=1,
+    )
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+
+    # Crear imagen del código QR
+    qr_image = qr.make_image(fill_color="black", back_color="white")
+    qr_image = qr_image.resize((60, 60)).convert("1")
+
+    # Calcular posición
+    qr_position = (0, 0)
+
+    # Crear una imagen en blanco para mostrar el texto
+
+    #Subtitle
+    primary_image = Image.new("1", (device.width, device.height), "black")
+    primary_draw = ImageDraw.Draw(primary_image)
+    primary_draw.text((40, 0), "PlumIA", fill="white", font=ImageFont.truetype(primary_font_path, 18))
+
+
+    subtitle_image = Image.new("1", (device.width, device.height), "black")
+    subtitle_draw = ImageDraw.Draw(subtitle_image)
+    subtitle_draw.text((55, 0), "Registrate", fill="white", font=ImageFont.truetype(secondary_font_path, 14))
+
+    message_image = Image.new("1", (device.width, device.height), "black")
+    message_draw = ImageDraw.Draw(message_image)
+    message_draw.text((55, 0), "Vehículo no", fill="white", font=ImageFont.truetype(secondary_font_path, 10))
+
+    message_image_2 = Image.new("1", (device.width, device.height), "black")
+    message_draw_2 = ImageDraw.Draw(message_image_2)
+    message_draw_2.text((55, 0), "encontrado", fill="white", font=ImageFont.truetype(secondary_font_path, 10))
+
+    
+
+    # Combinar imágenes (QR y textos)
+    combined_image = Image.new("1", (device.width, device.height), "black")
+    combined_image.paste(primary_image, (25, 0))
+    combined_image.paste(subtitle_image, (11, 17))
+    combined_image.paste(message_image, (15, 35))
+    combined_image.paste(message_image_2, (17, 46))
+    combined_image.paste(qr_image, qr_position)
+
+    device.display(combined_image)
 
 
 def show_empty_screen():

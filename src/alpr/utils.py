@@ -123,6 +123,8 @@ def read_license_plate(license_plate_crop):
     for detection in detections:
         bbox, text, score = detection
 
+        print(text)
+
         formated_text = format_license(text)
         
         if (formated_text is not None):

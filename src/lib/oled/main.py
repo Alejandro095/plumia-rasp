@@ -24,7 +24,7 @@ def init_oled(init_port = 1, init_address = 0x3C):
     device = sh1106(serial, rotate=0)
     initialized = True
 
-def display_common_screen(message="Bievenido"):
+def display_common_screen(message="Bievenido", second_message=None):
     if (initialized is not True):
         print("[Servo] ERROR: It's not initialized!")
         return;
@@ -36,6 +36,9 @@ def display_common_screen(message="Bievenido"):
     # Dibujar en la imagen
     center_text(draw, "PlumIA", title_font, (0, 0, device.width, device.height), 5)
     center_text(draw, message, subtitle_font, (0, 0, device.width, device.height), 25)
+    if (second_message != None):
+        center_text(draw, second_message, subtitle_font, (0, 0, device.width, device.height), 39)
+
 
     # Mostrar la imagen en la pantalla OLED
     device.display(image)
